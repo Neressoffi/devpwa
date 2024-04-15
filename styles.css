@@ -1,0 +1,79 @@
+@font-face {
+  font-family: "font-1";
+  src: url(./assets/LibreBaskerville-Regular.ttf);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "font-1", sans-serif;
+  background-color: #141414;
+  color: #fff;
+  text-align: center;
+}
+
+h1 {
+  font-size: 3rem;
+  letter-spacing: 3px;
+  margin: 40px 0;
+}
+
+input[type="text"] {
+  width: 80%;
+  padding: 10px;
+  margin: 20px auto;
+  border: none;
+  border-radius: 25px;
+  outline: none;
+  font-size: 1.2rem;
+  background-color: #333;
+  color: #fff;
+}
+
+input[type="submit"] {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  background-color: #e50914;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+  background-color: #b2070a;
+}
+
+.result-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+}
+
+.result-container li {
+  width: calc(33.33% - 20px);
+  margin: 10px;
+  padding: 20px;
+  background-color: #222;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.result-container img {
+  width: 100%;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.result-container p {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #ccc;
+  line-height: 1.5;
+}

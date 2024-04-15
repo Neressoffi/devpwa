@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil</title>
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Page d'accueil</h1>
+        <img src="/assets/icons/icon-192x192.png" alt="logo">
+        <p>Bienvenue sur mon devoir PWA</p>
+        
+        <!-- Formulaire de recherche -->
+        <form id="searchForm">
+            <input type="text" placeholder="Entrez le titre d'un film" id="searchInput"><br>
+            <input type="text" placeholder="URL de l'image du poster" id="searchInput"><br>
+            <input type="text" placeholder="Entrez le titre d'un film" id="searchInput"><br>
+            <input type="submit" value="Rechercher">
+          </form>
+        <div class="result-container">
+            <ul id="result"></ul>
+        </div>
+        
+    </div>
+
+    <script src="js/index.js"></script>
+  
+</body>
+</html>
