@@ -4,29 +4,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil</title>
-    
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
     <div class="container">
         <h1>Page d'accueil</h1>
-        <img src="/assets/icons/icon-192x192.png" alt="logo">
+        <img src="./assets/icons/icon-192x192.png" alt="logo">
         <p>Bienvenue sur mon devoir PWA</p>
         
         <!-- Formulaire de recherche -->
         <form id="searchForm">
             <input type="text" placeholder="Entrez le titre d'un film" id="searchInput"><br>
-            <input type="text" placeholder="URL de l'image du poster" id="searchInput"><br>
-            <input type="text" placeholder="Entrez le titre d'un film" id="searchInput"><br>
+            <!-- <input type="text" placeholder="Entrez le titre d'un sypnosis" id="sypnosis"><br> -->
             <input type="submit" value="Rechercher">
-          </form>
+        </form>
         <div class="result-container">
             <ul id="result"></ul>
         </div>
-        
     </div>
 
-    <script src="js/index.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/service-worker.js')
+                .then(function(registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(function(error) {
+                    console.log('Service Worker registration failed:', error);
+                });
+            });
+        }
+
+        const form = document.getElementById("searchForm");
+        const searchInput = document.getElementById("searchInput");
+        const searchSypnosisInput = document.getElementById("synopsis");
+        const result = document.getElementById("result");
+        let _allMovies = JSON.parse(localStorage.getItem('results') ?? '{}');
+        let _allMoviesFoRSynopsis = JSON.parse(localStorage.getItem('results_for_synopsis') ?? '{}');
+        let search = "";
+        let searchSypnosys = "";
+        let movies = [];
+        let _results = null;
+
+        const fetchMovies = async () => {
+            try {
+                let _res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=ed82f4c18f2964e75117c2dc65e2161d&query=${search}`)
+                    .then(response => response.json());
+                _allMovies[search] = _res.results;
+                localStorage.setItem('results', JSON.stringify(_allMovies));
+            } catch (err) {
+                console.error('Erreur inattendue: ', err.message);
+            }
+
+            if (search?.length) {
+                return _allMovies[search] ?? [];
+            }
+
+            return [];
+        };
+
+        const fetchMoviesForSynopsis = async () => {
+            try {
+                let _res = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=ed82f4c18f2964e75117c2dc65e2161d&query=${search}`)
+                    .then(response => response.json());
+                _allMoviesFoRSynopsis[search] = _res.results;
+                localStorage.setItem('results_for_synopsis', JSON.stringify(_allMoviesFoRSynopsis));
+            } catch (err) {
+                console.error('Erreur inattendue: ', err.message);
+            }
+
+            if (search?.length) {
+                return _allMoviesFoRSynopsis[search] ?? [];
+            }
+
+            return [];
+        };
+
+        const moviesDisplay = async () => {
+            search = searchInput?.value;
+            searchSypnosis = searchSypnosisInput?.value;
+            let _movies = [];
+            if (search?.length) {
+                _movies = await fetchMovies();
+            } else if (searchSypnosis?.length) {
+                _movies = await fetchMoviesForSynopsis();           
+            }
+            movies = _movies.slice(0, 12);
+            // movies = Object.fromEntries(Object.entries(obj).slice(0,3))
+
+            result.innerHTML = movies
+                .map(
+                    (movie) =>
+                        `
+                        <li>
+                            <h2>${movie.original_title}</h2>
+                            <div class="card-content">
+                                <img src="${movie.poster_path ? 'https://image.tmdb.org/t/p/w500/' + movie.poster_path : './assets/icons/icon-192x192.png'}" alt="${movie.original_title}"></img>
+                                <div class="infos">
+                                    <p>${movie.overview}</p>
+                                    <p>Popularité : ${movie.popularity} ⭐</p>
+                                </div>
+                            </div>
+                        </li>
+                        `
+                )
+                .join('');
+        };
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            moviesDisplay();
+        });
+    </script>
   
 </body>
 </html>
